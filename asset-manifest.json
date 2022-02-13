@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/feeling-turkish/static/css/main.553039de.css",
+    "main.js": "/feeling-turkish/static/js/main.e4b56627.js",
+    "static/js/787.a8aa1b3e.chunk.js": "/feeling-turkish/static/js/787.a8aa1b3e.chunk.js",
+    "static/media/flags.png": "/feeling-turkish/static/media/flags.338828720f0358bc865b.png",
+    "index.html": "/feeling-turkish/index.html",
+    "main.553039de.css.map": "/feeling-turkish/static/css/main.553039de.css.map",
+    "main.e4b56627.js.map": "/feeling-turkish/static/js/main.e4b56627.js.map",
+    "787.a8aa1b3e.chunk.js.map": "/feeling-turkish/static/js/787.a8aa1b3e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.553039de.css",
+    "static/js/main.e4b56627.js"
+  ]
+}
