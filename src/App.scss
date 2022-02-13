@@ -1,0 +1,124 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+.app{
+    font-size: 1.5rem;
+    // padding: 1rem;
+    select{
+        font-size: 1.5rem;
+    }
+    .switcher{
+        background-color: transparent;
+        border: none;
+        outline: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+    header{
+        background-color: hsl(0, 0%, 90%);
+        background-image: url('img/flags.png');
+        background-position: center;
+        background-size: cover;
+        padding: 1rem;
+        position: relative;
+        >div{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(255,255,255,.4);
+        }
+        h1{
+            z-index: 1;
+            font-size: 2rem;
+            text-align: center;
+            position: relative;
+            text-shadow: 1px 1px 3px #fff, -1px -1px 3px #fff, -1px 1px 3px #fff, 1px -1px 3px #fff;
+        }
+    }
+    main{
+        #converter{
+            display: flex;
+            flex-direction: column;
+            padding: 1rem 1rem 0;
+            >div{
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                max-width: 100%;
+                .block1{
+                    flex-grow: 1;
+                    :first-child{
+                        text-align: right;
+                        font-size: 1.5rem;
+                        height: 3rem;
+                        padding: .5rem;
+                        width: 100%;
+                        display: block;
+                        &::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                        }
+                    }
+                }
+                .block2 {
+                    display: flex;
+                    justify-content: center;
+                    width: 85px;
+                    select{
+                        height: 100%;
+                    }
+                }
+                &#equal{
+                    font-size: 2rem;
+                    .block1{
+                        text-align: right;
+                        padding-right: .5rem;
+                    }
+                    .block2 >div{
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+            }
+        }
+        #feeler{
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            select{
+                text-align: center;
+                background-size: cover;
+                background-position: center;
+                height: 2.5rem;
+                text-shadow: 1px 1px 3px #fff, -1px -1px 3px #fff, -1px 1px 3px #fff, 1px -1px 3px #fff;
+                font-weight: bold;
+            }
+            >*{
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+            }
+            .switcher{
+                font-size: 2rem;
+            }
+        }
+    }
+    nav{
+        width: 100%;
+        height: 80px;
+        position: fixed;
+        bottom: 0;
+        background-color: red;
+    }
+}
