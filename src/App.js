@@ -137,7 +137,6 @@ function App() {
       const eurValue = inputValue / conversionRates.obj[currencyFrom];
       const from = countriesData.filter(data=>data.country === countryFrom)[0];
       const to = countriesData.filter(data=>data.country === countryTo)[0];
-      console.log(from, to)
       if(!from || !to){return null}
       const fromSalary = from? from.data["Salaries And Financing"]["Average Monthly Net Salary (After Tax)"] : null;
       const toSalary = to? to.data["Salaries And Financing"]["Average Monthly Net Salary (After Tax)"] : null;
