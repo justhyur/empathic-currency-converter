@@ -137,9 +137,11 @@ function App() {
       const eurValue = inputValue / conversionRates.obj[currencyFrom];
       const from = countriesData.filter(data=>data.country === countryFrom)[0];
       const to = countriesData.filter(data=>data.country === countryTo)[0];
+      console.log(from, to)
       if(!from || !to){return null}
-      const fromSalary = from? from.data["Salaries And Financing"]["Average Monthly Net Salary (After Tax)"] : 0;
-      const toSalary = to? to.data["Salaries And Financing"]["Average Monthly Net Salary (After Tax)"] : 0;
+      const fromSalary = from? from.data["Salaries And Financing"]["Average Monthly Net Salary (After Tax)"] : null;
+      const toSalary = to? to.data["Salaries And Financing"]["Average Monthly Net Salary (After Tax)"] : null;
+      if(fromSalary === null || toSalary === null){return null}
       return eurValue * toSalary / fromSalary;
     }else{return null}
   }
@@ -240,7 +242,7 @@ function App() {
               {getFeelValue() !== null?
                 `${parseFloat(getFeelValue()).toFixed(2)} ${currencyFrom}`
               :
-                ''
+                'NOT ENOUGH DATA'
               }
             </strong>
             <div>
