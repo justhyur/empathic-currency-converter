@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/empathic-currency-converter/static/css/main.b154a114.css",
-    "main.js": "/empathic-currency-converter/static/js/main.390132df.js",
+    "main.js": "/empathic-currency-converter/static/js/main.92ba899f.js",
     "static/js/787.a8aa1b3e.chunk.js": "/empathic-currency-converter/static/js/787.a8aa1b3e.chunk.js",
     "static/media/flags.png": "/empathic-currency-converter/static/media/flags.338828720f0358bc865b.png",
     "index.html": "/empathic-currency-converter/index.html",
     "main.b154a114.css.map": "/empathic-currency-converter/static/css/main.b154a114.css.map",
-    "main.390132df.js.map": "/empathic-currency-converter/static/js/main.390132df.js.map",
+    "main.92ba899f.js.map": "/empathic-currency-converter/static/js/main.92ba899f.js.map",
     "787.a8aa1b3e.chunk.js.map": "/empathic-currency-converter/static/js/787.a8aa1b3e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b154a114.css",
-    "static/js/main.390132df.js"
+    "static/js/main.92ba899f.js"
   ]
 }
