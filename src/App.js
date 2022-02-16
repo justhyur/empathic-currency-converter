@@ -4,6 +4,8 @@ import countriesData from './countries_data.json'
 
 function App() {
 
+  const baseCurrency = 'EUR';
+
   const getStorage = (key) => {
     return JSON.parse(localStorage.getItem(key))
   }
@@ -18,8 +20,6 @@ function App() {
   const [ userCountry, setUserCountry ] = useState('');
   const [ conversionRates, setConversionRates ] = useState(getStorage('conversionRates'));
   
-  const [ baseCurrency, setBaseCurrency ] = useState('EUR');
-
   const [ countryFrom, setCountryFrom ] = useState('');
   const [ imageFrom, setImageFrom ] = useState('');
   const [ countryTo, setCountryTo ] = useState('');
@@ -236,7 +236,7 @@ function App() {
               {getFeelValue() !== null?
                 `${parseFloat(getFeelValue()).toFixed(2)} ${currencyFrom}`
               :
-                'NOT ENOUGH DATA'
+                '...'
               }
             </strong>
             <div>
