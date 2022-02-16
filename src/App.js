@@ -73,11 +73,13 @@ function App() {
 
  
   const loadUserCountry = () => {
-    fetch('http://ip-api.com/json/?fields=country')
+    const url = process.env.REACT_APP_IP_URL;
+    const api = process.env.REACT_APP_IP_API;
+    fetch(`${url}?apiKey=${api}`)
     .then(response=>{
       response.json()
       .then(json=>{
-        setUserCountry(json.country);
+        setUserCountry(json.country_name);
       })
     })
     // setUserCountry('Italy');
