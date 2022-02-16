@@ -13,7 +13,7 @@ function App() {
   }
 
   const [ isOnline, setIsOnline ] = useState(window.navigator.onLine);
-  const [ apiKey, setApiKey ] = useState(null);
+  // const [ apiKey, setApiKey ] = useState(null);
 
   const [ userCountry, setUserCountry ] = useState('');
   const [ conversionRates, setConversionRates ] = useState(getStorage('conversionRates'));
@@ -35,21 +35,13 @@ function App() {
   useEffect(()=>{
     window.addEventListener('online', () => setIsOnline(true));
     window.addEventListener('offline', () => setIsOnline(false));
-    const urlParams = new URLSearchParams(window.location.search);
-    const key = urlParams.get('key');
-    setApiKey(key);
     loadUserCountry();
+    loadConversionRates();
   },[]);
 
   useEffect(()=>{
     setCountryTo(userCountry);
   },[userCountry])
-
-  useEffect(()=>{
-    if(apiKey){
-      loadConversionRates();
-    }
-  },[apiKey])
 
   useEffect(()=>{
     fetch(`https://countryflagsapi.com/svg/${countryFrom.toLowerCase()}`)
@@ -94,7 +86,9 @@ function App() {
   const fetchConversionRates = () => {
     console.log("fetched");
     if(isOnline){
-      fetch(`https://freecurrencyapi.net/api/v2/latest?apikey=${apiKey}&base_currency=${baseCurrency}`)
+      const url = process.env.REACT_APP_CURRENCY_URL;
+      const api = process.env.REACT_APP_CURRENCY_API;
+      fetch(`${url}?apikey=${api}&base_currency=${baseCurrency}`)
       .then( response => response.json()).catch(err => {console.error(err); setConversionRates(getStorage('conversionRates'));})
       .then( json => {
         if(json){
@@ -114,6 +108,7 @@ function App() {
     if(convRates){
       const now = Date.now();
       const timePassedSinceLastFetch = (now - convRates.date) / 1000;
+      console.log(timePassedSinceLastFetch)
       if(timePassedSinceLastFetch < 60){
         setTimeout(()=>{
           console.log(`Time passed since last fetch is less than a minute. (${Math.floor(timePassedSinceLastFetch)} seconds)`);
