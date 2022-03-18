@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './App.scss';
 import countriesData from './countries_data.json';
-import Select from 'react-select';
 import InputSelect from './components/InputSelect'
 
 function App() {
@@ -63,7 +62,6 @@ function App() {
   },[countryTo])
 
   useEffect(()=>{
-    console.log(inputValue);
   }, [inputValue])
 
  
@@ -109,7 +107,6 @@ function App() {
     if(convRates){
       const now = Date.now();
       const timePassedSinceLastFetch = (now - convRates.date) / 1000;
-      console.log(timePassedSinceLastFetch)
       if(timePassedSinceLastFetch < 3600){
         setTimeout(()=>{
           console.log(`Time passed since last fetch is less than one hour. (${Math.floor(timePassedSinceLastFetch)} seconds)`);
@@ -131,7 +128,6 @@ function App() {
   const getFeelValue = (inputValue, currencyFrom, countryFrom, countryTo) => {
     if(!isNaN(inputValue)){
       const eurValue = inputValue / conversionRates.obj[currencyFrom].value;
-      console.log(countriesData)
       const from = countriesData.filter(data=>data.code === countryFrom)[0];
       const to = countriesData.filter(data=>data.code === countryTo)[0];
       if(!from || !to){return null}
