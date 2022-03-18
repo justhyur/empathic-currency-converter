@@ -1,0 +1,28 @@
+$shadow_intensity: 0.1px;
+
+.input-select{
+    position: relative;
+    input{
+        font-size: 1.5rem;
+        width: 100%;
+        padding: 0.5rem;
+    }
+    .select-list{
+        width: 100%;
+        z-index: 1;
+        position: absolute;
+        top: 2.9rem;
+        max-height: calc(2.5rem * 5);
+        overflow-y: auto;
+        overflow-x: hidden;
+        border: 1px solid #767676;
+        box-shadow: 
+            $shadow_intensity $shadow_intensity 3px #888888, 
+            -$shadow_intensity $shadow_intensity 3px #888888;
+        .option{
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+    }
+}

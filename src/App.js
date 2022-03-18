@@ -1,8 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './App.scss';
-import countriesData from './countries_data.json'
+import countriesData from './countries_data.json';
+import Select from 'react-select';
+import InputSelect from './components/InputSelect'
 
 function App() {
+
+  
 
   const baseCurrency = 'EUR';
 
@@ -10,6 +14,9 @@ function App() {
     return JSON.parse(localStorage.getItem(key))
   }
   const setStorage = (key, obj) => {
+    localStorage.setItem(key, JSON.stringify(obj));
+  }
+  const setStorageDate = (key, obj) => {
     const data = {obj, date:Date.now()}
     localStorage.setItem(key, JSON.stringify(data));
   }
@@ -17,17 +24,16 @@ function App() {
   const [ isOnline, setIsOnline ] = useState(window.navigator.onLine);
   // const [ apiKey, setApiKey ] = useState(null);
 
-  const [ userCountry, setUserCountry ] = useState('');
   const [ conversionRates, setConversionRates ] = useState(getStorage('conversionRates'));
   
-  const [ countryFrom, setCountryFrom ] = useState('');
-  const [ imageFrom, setImageFrom ] = useState('');
-  const [ countryTo, setCountryTo ] = useState('');
-  const [ imageTo, setImageTo ] = useState('');
+  const [ countryFrom, setCountryFrom ] = useState(getStorage('countryFrom'));
+  
+  const [ countryTo, setCountryTo ] = useState(getStorage('countryTo'));
+
   const [ inputValue, setInputValue ] = useState(1);
 
-  const [ currencyFrom, setCurrencyFrom ] = useState('EUR');
-  const [ currencyTo, setCurrencyTo ] = useState('TRY');
+  const [ currencyFrom, setCurrencyFrom ] = useState(getStorage('currencyFrom'));
+  const [ currencyTo, setCurrencyTo ] = useState(getStorage('currencyTo'));
 
   const inputRef = useRef(null);
   
@@ -35,41 +41,30 @@ function App() {
   useEffect(()=>{
     window.addEventListener('online', () => setIsOnline(true));
     window.addEventListener('offline', () => setIsOnline(false));
-    loadUserCountry();
+    // loadUserCountry();
     loadConversionRates();
+    // console.log(countriesData)
   },[]);
 
   useEffect(()=>{
-    setCountryTo(userCountry);
-  },[userCountry])
+    setStorage('currencyFrom', currencyFrom);
+  },[currencyFrom])
+  
+  useEffect(()=>{
+    setStorage('currencyTo', currencyTo);
+  },[currencyTo])
 
   useEffect(()=>{
-    fetch(`https://countryflagsapi.com/svg/${countryFrom.toLowerCase()}`)
-    .then(response=>{
-      response.blob()
-      .then(blob=>{
-        const reader = new FileReader();
-        reader.onload = () => {
-          setImageFrom(reader.result)
-        };
-        reader.readAsDataURL(blob);
-      })
-    })
+    setStorage('countryFrom', countryFrom);
   },[countryFrom])
+  
+  useEffect(()=>{
+    setStorage('countryTo', countryTo);
+  },[countryTo])
 
   useEffect(()=>{
-    fetch(`https://countryflagsapi.com/svg/${countryTo.toLowerCase()}`)
-    .then(response=>{
-      response.blob()
-      .then(blob=>{
-        const reader = new FileReader();
-        reader.onload = () => {
-          setImageTo(reader.result)
-        };
-        reader.readAsDataURL(blob);
-      })
-    })
-  },[countryTo])
+    console.log(inputValue);
+  }, [inputValue])
 
  
   const loadUserCountry = () => {
@@ -79,7 +74,11 @@ function App() {
     .then(response=>{
       response.json()
       .then(json=>{
-        setUserCountry(json.country_name);
+        const countryCode = json.country_code2;
+        if(getStorage('countryTo') === null){
+          setCurrencyTo(countryCode);
+          setStorage('countryTo', countryCode);
+        }
       })
     })
     // setUserCountry('Italy');
@@ -95,7 +94,7 @@ function App() {
       .then( json => {
         if(json){
           const sortedJson = sortObject(json.data);
-          setStorage('conversionRates', sortedJson);
+          setStorageDate('conversionRates', sortedJson);
           setConversionRates(getStorage('conversionRates'));
         }
       })
@@ -111,9 +110,9 @@ function App() {
       const now = Date.now();
       const timePassedSinceLastFetch = (now - convRates.date) / 1000;
       console.log(timePassedSinceLastFetch)
-      if(timePassedSinceLastFetch < 60){
+      if(timePassedSinceLastFetch < 3600){
         setTimeout(()=>{
-          console.log(`Time passed since last fetch is less than a minute. (${Math.floor(timePassedSinceLastFetch)} seconds)`);
+          console.log(`Time passed since last fetch is less than one hour. (${Math.floor(timePassedSinceLastFetch)} seconds)`);
           setConversionRates(convRates);
         },250)
         return;
@@ -129,11 +128,12 @@ function App() {
     }
   }
 
-  const getFeelValue = () => {
+  const getFeelValue = (inputValue, currencyFrom, countryFrom, countryTo) => {
     if(!isNaN(inputValue)){
-      const eurValue = inputValue / conversionRates.obj[currencyFrom];
-      const from = countriesData.filter(data=>data.country === countryFrom)[0];
-      const to = countriesData.filter(data=>data.country === countryTo)[0];
+      const eurValue = inputValue / conversionRates.obj[currencyFrom].value;
+      console.log(countriesData)
+      const from = countriesData.filter(data=>data.code === countryFrom)[0];
+      const to = countriesData.filter(data=>data.code === countryTo)[0];
       if(!from || !to){return null}
       const fromSalary = from? from.data["Salaries And Financing"]["Average Monthly Net Salary (After Tax)"] : null;
       const toSalary = to? to.data["Salaries And Financing"]["Average Monthly Net Salary (After Tax)"] : null;
@@ -143,8 +143,12 @@ function App() {
   }
 
   const convertClassic = (value, from, to) => {
-    const eurValue = value / conversionRates.obj[from];
-    return eurValue * conversionRates.obj[to];
+    if(conversionRates.obj[from] && conversionRates.obj[to]){
+      const eurValue = value / conversionRates.obj[from].value;
+      return eurValue * conversionRates.obj[to].value;
+    }else{
+      return 0;
+    }
   }
 
   const switchCurrencies = () => {
@@ -181,11 +185,14 @@ function App() {
                 ></input>
               </div>
               <div className="block2">
-                <select value={currencyFrom} onChange={(e)=>{setCurrencyFrom(e.target.value)}}>
-                  {Object.keys(conversionRates.obj).map((currency, index)=>(
-                      <option key={`currencyFrom${index}`} value={currency}>{currency}</option>
-                    ))}
-                </select>
+                <div className="input-container" style={{width: "100px"}}>
+                  <InputSelect
+                    name="currencyFrom"
+                    value={currencyFrom}
+                    setValue={setCurrencyFrom}
+                    options={Object.keys(conversionRates.obj).map(key=>({value:key, label:key}))}
+                  />
+                </div>
               </div>
             </div>
             <div id="equal">
@@ -203,40 +210,39 @@ function App() {
                 <strong>{inputValue? parseFloat(convertClassic(inputValue, currencyFrom, currencyTo)).toFixed(2) : ''}</strong>
               </div>
               <div className="block2">
-                <select value={currencyTo} onChange={(e)=>{setCurrencyTo(e.target.value)}}>
-                  {Object.keys(conversionRates.obj).map((currency, index)=>(
-                      <option key={`currencyTo${index}`} value={currency}>{currency}</option>
-                    ))}
-                </select>
+              <div className="input-container" style={{width: "100px"}}>
+                  <InputSelect
+                    name="currencyTo"
+                    value={currencyTo}
+                    setValue={setCurrencyTo}
+                    options={Object.keys(conversionRates.obj).map(key=>({value:key, label:key}))}
+                  />
+                </div>
               </div>
             </div>
           </section>
 
           <section id="feeler">
             <span>Someone from</span>
-            <select 
-              style={{backgroundImage: `url('${imageFrom}')`}} 
-              value={countryFrom} onChange={(e)=>{setCountryFrom(e.target.value)}}>
-                <option value=""></option>
-              {countriesData.map((country, index)=>(
-                <option key={`countryFrom${index}`} value={country.country}>{country.country}</option>
-              ))}
-            </select>
+            <InputSelect 
+              name="countryFrom"
+              value={countryFrom}
+              setValue={setCountryFrom}
+              options={countriesData.map(country=>({value:country.code, label:country.name}))}
+            />
             <span>would feel</span>
             <strong>{parseFloat(inputValue).toFixed(2)} {currencyFrom}</strong>
             <span>like someone from</span>
-            <select 
-              style={{backgroundImage: `url('${imageTo}')`}} 
-              value={countryTo} onChange={(e)=>{setCountryTo(e.target.value)}}>
-                <option value=""></option>
-              {countriesData.map((country, index)=>(
-                <option key={`countryFrom${index}`} value={country.country}>{country.country}</option>
-                ))}
-            </select>
+            <InputSelect 
+              name="countryTo"
+              value={countryTo}
+              setValue={setCountryTo}
+              options={countriesData.map(country=>({value:country.code, label:country.name}))}
+            />
             <span>would feel</span>
             <strong>
-              {getFeelValue() !== null?
-                `${parseFloat(getFeelValue()).toFixed(2)} ${currencyFrom}`
+              {getFeelValue(inputValue, currencyFrom, countryFrom, countryTo) !== null?
+                `${parseFloat(getFeelValue(inputValue, currencyFrom, countryFrom, countryTo)).toFixed(2)} ${currencyFrom}`
               :
                 '...'
               }
