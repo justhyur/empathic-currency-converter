@@ -126,7 +126,7 @@ function App() {
   }
 
   const getFeelValue = (inputValue, currencyFrom, countryFrom, countryTo) => {
-    if(!isNaN(inputValue) && conversionRates && conversionRates.obj){
+    if(!isNaN(inputValue) && conversionRates && conversionRates.obj && conversionRates.obj[currencyFrom]){
       const eurValue = inputValue / conversionRates.obj[currencyFrom].value;
       const from = countriesData.filter(data=>data.code === countryFrom)[0];
       const to = countriesData.filter(data=>data.code === countryTo)[0];
